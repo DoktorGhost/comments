@@ -11,15 +11,15 @@ import (
 
 const (
 	host     = "localhost"
-	port     = 5432
+	port     = 5433
 	user     = "admin"
 	password = "admin"
-	dbname   = "comment_service"
+	dbname   = "comments"
 )
 
 var DB *sql.DB
 
-func InitDB() {
+func InitDB() *sql.DB {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
@@ -35,6 +35,7 @@ func InitDB() {
 	}
 
 	DB = db
+	return DB
 }
 
 func ExecuteSchemaSQL(db *sql.DB) {

@@ -1,10 +1,12 @@
+/*
 package api_gateway
 
+
 import (
-	"APIGateway/pcg/comments"
-	"APIGateway/pcg/logs"
-	"APIGateway/pcg/news"
-	"APIGateway/pcg/types"
+	"CommentsService/pcg/comments"
+	"CommentsService/pcg/logs"
+	"CommentsService/pcg/news"
+	"CommentsService/pcg/types"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -159,3 +161,4 @@ func extractParametersFromRequest(r *http.Request) (int, int, string) {
 
 	return page, pageSize, query
 }
+*/

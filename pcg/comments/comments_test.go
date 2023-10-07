@@ -1,9 +1,9 @@
 package comments_test
 
 import (
-	"APIGateway/db"
-	"APIGateway/pcg/comments"
-	"APIGateway/pcg/types"
+	"CommentsService/db"
+	"CommentsService/pcg/comments"
+	"CommentsService/pcg/types"
 	"log"
 	"testing"
 
@@ -13,6 +13,8 @@ import (
 func TestComment(t *testing.T) {
 
 	db.InitDB()
+
+	defer db.CloseDB()
 
 	// Ваши параметры для добавления комментария
 	newsID := 1
@@ -58,6 +60,8 @@ func TestComment(t *testing.T) {
 
 func TestGetCommentsByNewsID(t *testing.T) {
 	db.InitDB()
+
+	defer db.CloseDB()
 
 	newsID := 1
 	commentsToAdd := []types.Comment{

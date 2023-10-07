@@ -1,8 +1,8 @@
 package comments
 
 import (
-	"APIGateway/db"
-	"APIGateway/pcg/types"
+	"CommentsService/db"
+	"CommentsService/pcg/types"
 )
 
 // Метод для добавления комментария
