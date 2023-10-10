@@ -6,3 +6,10 @@ type Comment struct {
 	Text            string `json:"text"`
 	ParentCommentID int    `json:"parent_id"`
 }
+
+type Request struct {
+	NewsID          int    `json:"news_id"`
+	CommentText     string `json:"commentText"`
+	ParentCommentID int    `json:"parent_id"`
+	UniqueID        string `json:"uniqueID"`
+}
