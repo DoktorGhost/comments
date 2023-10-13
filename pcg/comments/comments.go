@@ -3,6 +3,7 @@ package comments
 import (
 	"CommentsService/db"
 	"CommentsService/pcg/types"
+	"fmt"
 )
 
 // Метод для добавления комментария
@@ -22,10 +23,21 @@ func AddComment(newsID int, сommentText string, parentCommentID int) (int, erro
 
 // Метод для удаления комментария по ID
 func DeleteComment(commentID int) error {
-	// SQL-запрос для удаления комментария из таблицы comments
-	query := "DELETE FROM comments WHERE id = $1"
+	// Проверим сначала, существует ли комментарий с указанным ID
+	var count int
+	err := db.DB.QueryRow("SELECT COUNT(*) FROM comments WHERE id = $1", commentID).Scan(&count)
+	if err != nil {
+		return err
+	}
 
-	_, err := db.DB.Exec(query, commentID)
+	// Если комментарий с указанным ID не найден, вернем ошибку
+	if count == 0 {
+		return fmt.Errorf("Comment with ID %d not found", commentID)
+	}
+
+	// Если комментарий с указанным ID существует, выполним удаление
+	query := "DELETE FROM comments WHERE id = $1"
+	_, err = db.DB.Exec(query, commentID)
 	if err != nil {
 		return err
 	}
@@ -36,7 +48,7 @@ func DeleteComment(commentID int) error {
 // Метод извлечения комментария по ID
 func GetComment(commentID int) (types.Comment, error) {
 	var comment types.Comment
-	err := db.DB.QueryRow("SELECT id, news_id, text, parent_comment_id FROM comments WHERE id = $1", commentID).Scan(&comment.ID, &comment.NewsID, &comment.Text, &comment.ParentCommentID)
+	err := db.DB.QueryRow("SELECT id, news_id, text, parent_comment_id FROM comments WHERE id = $1", commentID).Scan(&comment.ID, &comment.NewsID, &comment.CommentText, &comment.ParentCommentID)
 	if err != nil {
 		return types.Comment{}, err
 	}
@@ -54,7 +66,7 @@ func GetCommentsByNewsID(newsID int) ([]types.Comment, error) {
 
 	for rows.Next() {
 		var comment types.Comment
-		if err := rows.Scan(&comment.ID, &comment.NewsID, &comment.Text, &comment.ParentCommentID); err != nil {
+		if err := rows.Scan(&comment.ID, &comment.NewsID, &comment.CommentText, &comment.ParentCommentID); err != nil {
 			return nil, err
 		}
 		comments = append(comments, comment)
