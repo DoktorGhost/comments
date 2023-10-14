@@ -3,11 +3,35 @@ package comments
 import (
 	"CommentsService/db"
 	"CommentsService/pcg/types"
+	"errors"
 	"fmt"
 )
 
 // Метод для добавления комментария
 func AddComment(newsID int, сommentText string, parentCommentID int) (int, error) {
+
+	if parentCommentID != 0 && newsID != 0 {
+		// Проверьте, что parentCommentID принадлежит указанной newsID
+		query := "SELECT news_id FROM comments WHERE id = $1"
+		var parentNewsID int
+		err := db.DB.QueryRow(query, parentCommentID).Scan(&parentNewsID)
+		if err != nil {
+			return 0, err
+		}
+
+		if parentNewsID != newsID {
+			return 0, errors.New("parentCommentID does not belong to the specified newsID")
+		}
+	}
+
+	if newsID == 0 && parentCommentID != 0 {
+		// Если newsID равно 0, выполните дополнительный запрос для извлечения newsID
+		query := "SELECT news_id FROM comments WHERE id = $1"
+		err := db.DB.QueryRow(query, parentCommentID).Scan(&newsID)
+		if err != nil {
+			return 0, err
+		}
+	}
 	// SQL-запрос для вставки комментария в таблицу comments
 	query := "INSERT INTO comments (news_id, text, parent_comment_id) VALUES ($1, $2, $3) RETURNING id"
 
